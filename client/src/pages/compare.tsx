@@ -79,34 +79,44 @@ export default function Compare() {
           <div className="p-4">
             <Card>
               <CardHeader>
-                <CardTitle>College Comparison</CardTitle>
+                <CardTitle className="flex items-center space-x-2">
+                  <BarChart3 className="w-5 h-5 text-primary" />
+                  <span>College Comparison</span>
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="overflow-x-auto">
-                  <table className="w-full">
+                  <table className="w-full border-collapse">
                     <thead>
-                      <tr>
-                        <th className="text-left py-2 px-3 text-sm font-medium text-gray-600 dark:text-gray-400">
+                      <tr className="bg-gray-50 dark:bg-gray-800">
+                        <th className="text-left py-3 px-4 text-sm font-semibold text-gray-700 dark:text-gray-300 border-b border-gray-200 dark:border-gray-600">
                           Criteria
                         </th>
                         {selectedColleges.map((college) => (
-                          <th key={college.id} className="text-left py-2 px-3 text-sm font-medium text-gray-900 dark:text-gray-100 min-w-32">
-                            <div className="truncate" title={college.name}>
-                              {college.shortName || college.name}
+                          <th key={college.id} className="text-left py-3 px-4 text-sm font-semibold text-gray-900 dark:text-gray-100 min-w-40 border-b border-gray-200 dark:border-gray-600">
+                            <div className="flex flex-col">
+                              <div className="truncate font-medium" title={college.name}>
+                                {college.shortName || college.name}
+                              </div>
+                              <div className="text-xs text-gray-500 dark:text-gray-400 font-normal">
+                                {college.location}
+                              </div>
                             </div>
                           </th>
                         ))}
                       </tr>
                     </thead>
                     <tbody>
-                      {comparisonFields.map((field) => (
-                        <tr key={field.key} className="border-t border-gray-100 dark:border-gray-700">
-                          <td className="py-3 px-3 text-sm font-medium text-gray-700 dark:text-gray-300">
+                      {comparisonFields.map((field, index) => (
+                        <tr key={field.key} className={`${index % 2 === 0 ? 'bg-white dark:bg-gray-900' : 'bg-gray-50/50 dark:bg-gray-800/50'} hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors`}>
+                          <td className="py-4 px-4 text-sm font-medium text-gray-700 dark:text-gray-300 border-b border-gray-100 dark:border-gray-700">
                             {field.label}
                           </td>
                           {selectedColleges.map((college) => (
-                            <td key={college.id} className="py-3 px-3 text-sm text-gray-900 dark:text-gray-100">
-                              {field.format((college as any)[field.key], college)}
+                            <td key={college.id} className="py-4 px-4 text-sm text-gray-900 dark:text-gray-100 border-b border-gray-100 dark:border-gray-700">
+                              <span className="font-medium">
+                                {field.format((college as any)[field.key], college)}
+                              </span>
                             </td>
                           ))}
                         </tr>
@@ -116,6 +126,25 @@ export default function Compare() {
                 </div>
               </CardContent>
             </Card>
+          </div>
+        )}
+
+        {/* Comparison Instructions */}
+        {selectedColleges.length === 1 && (
+          <div className="p-4">
+            <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+              <div className="flex items-start space-x-3">
+                <BarChart3 className="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5" />
+                <div>
+                  <h3 className="font-medium text-blue-900 dark:text-blue-100 mb-1">
+                    Add one more college to compare
+                  </h3>
+                  <p className="text-sm text-blue-700 dark:text-blue-300">
+                    Select another college from the list below to see a detailed side-by-side comparison.
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
         )}
 
@@ -140,40 +169,42 @@ export default function Compare() {
           )}
 
           {colleges.length > 0 && (
-            <div className="space-y-3">
+            <div className="space-y-4">
               <h3 className="font-medium text-gray-800 dark:text-gray-200">
                 {searchQuery ? 'Search Results' : 'Popular Colleges'}
               </h3>
-              {colleges
-                .filter(college => !selectedColleges.find(c => c.id === college.id))
-                .slice(0, 10)
-                .map((college) => (
-                  <div
-                    key={college.id}
-                    className="flex items-center justify-between p-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700"
-                  >
-                    <div className="flex-1">
-                      <h4 className="font-medium text-gray-800 dark:text-gray-200 mb-1">
-                        {college.name}
-                      </h4>
-                      <div className="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400">
-                        <span>{college.location}</span>
-                        <Badge variant="outline" className="text-xs">
-                          #{college.overallRank || 'N/A'}
-                        </Badge>
-                      </div>
-                    </div>
-                    <Button
-                      size="sm"
-                      onClick={() => addCollege(college)}
-                      disabled={selectedColleges.length >= 4}
-                      className="flex items-center space-x-1"
+              <div className="grid grid-cols-1 gap-3">
+                {colleges
+                  .filter(college => !selectedColleges.find(c => c.id === college.id))
+                  .slice(0, 10)
+                  .map((college) => (
+                    <div
+                      key={college.id}
+                      className="flex items-center justify-between p-4 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow"
                     >
-                      <Plus className="w-4 h-4" />
-                      <span>Add</span>
-                    </Button>
-                  </div>
-                ))}
+                      <div className="flex-1 min-w-0">
+                        <h4 className="font-medium text-gray-800 dark:text-gray-200 mb-1 truncate">
+                          {college.name}
+                        </h4>
+                        <div className="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400">
+                          <span className="truncate">{college.location}</span>
+                          <Badge variant="outline" className="text-xs shrink-0">
+                            #{college.overallRank || 'N/A'}
+                          </Badge>
+                        </div>
+                      </div>
+                      <Button
+                        size="sm"
+                        onClick={() => addCollege(college)}
+                        disabled={selectedColleges.length >= 4}
+                        className="flex items-center space-x-1 ml-3 shrink-0"
+                      >
+                        <Plus className="w-4 h-4" />
+                        <span>Add</span>
+                      </Button>
+                    </div>
+                  ))}
+              </div>
             </div>
           )}
 

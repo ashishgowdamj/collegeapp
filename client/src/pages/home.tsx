@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Link } from "wouter";
-import { Search, BarChart3, Lightbulb, Calendar, SlidersHorizontal } from "lucide-react";
+import { Link, useLocation } from "wouter";
+import { Search, BarChart3, Lightbulb, Calendar, SlidersHorizontal, X } from "lucide-react";
 import AppHeader from "@/components/app-header";
 import BottomNavigation from "@/components/bottom-navigation";
 import CollegeCard from "@/components/college-card";
@@ -12,8 +12,10 @@ import { Badge } from "@/components/ui/badge";
 import type { College } from "@shared/schema";
 
 export default function Home() {
+  const [, setLocation] = useLocation();
   const [searchQuery, setSearchQuery] = useState("");
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
+  const [compareList, setCompareList] = useState<College[]>([]);
   const [filters, setFilters] = useState<FilterState>({
     courseTypes: [],
     state: "all",
@@ -32,9 +34,65 @@ export default function Home() {
     // TODO: Apply filters to college query
   };
 
+  const handleAddToCompare = (college: College) => {
+    if (compareList.length < 4 && !compareList.find(c => c.id === college.id)) {
+      setCompareList([...compareList, college]);
+    }
+  };
+
+  const handleRemoveFromCompare = (collegeId: number) => {
+    setCompareList(compareList.filter(c => c.id !== collegeId));
+  };
+
+  const handleGoToCompare = () => {
+    setLocation('/compare');
+  };
+
   return (
     <>
       <AppHeader />
+      
+      {/* Comparison Bar */}
+      {compareList.length > 0 && (
+        <div className="bg-primary text-white px-4 py-2 border-b border-primary-dark">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-2">
+              <BarChart3 className="w-4 h-4" />
+              <span className="text-sm font-medium">
+                {compareList.length} college{compareList.length > 1 ? 's' : ''} selected
+              </span>
+            </div>
+            <div className="flex items-center space-x-2">
+              {compareList.length >= 2 && (
+                <Button
+                  size="sm"
+                  variant="secondary"
+                  onClick={handleGoToCompare}
+                  className="text-xs h-7 bg-white/20 hover:bg-white/30 text-white border-white/30"
+                >
+                  Compare Now
+                </Button>
+              )}
+              <button
+                onClick={() => setCompareList([])}
+                className="text-white/80 hover:text-white p-1"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+          <div className="flex space-x-1 mt-2 overflow-x-auto">
+            {compareList.map((college) => (
+              <div key={college.id} className="flex items-center space-x-1 bg-white/20 px-2 py-1 rounded text-xs whitespace-nowrap">
+                <span>{college.shortName || college.name}</span>
+                <button onClick={() => handleRemoveFromCompare(college.id)}>
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
       
       {/* Search Section */}
       <section className="px-4 py-4 bg-primary text-white">
@@ -123,7 +181,7 @@ export default function Home() {
         </section>
 
         {/* College List */}
-        <section className="space-y-4 mb-8">
+        <section className="mb-8">
           {isLoading ? (
             <div className="text-center py-8">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
@@ -134,9 +192,18 @@ export default function Home() {
               <p className="text-gray-500 dark:text-gray-400">No colleges found</p>
             </div>
           ) : (
-            colleges.map((college) => (
-              <CollegeCard key={college.id} college={college} />
-            ))
+            <div className="grid grid-cols-1 gap-4">
+              {colleges.map((college) => (
+                <div key={college.id} className="w-full">
+                  <CollegeCard 
+                    college={college} 
+                    showCompareButton={true}
+                    onCompare={handleAddToCompare}
+                    isCompareDisabled={compareList.length >= 4 || compareList.some(c => c.id === college.id)}
+                  />
+                </div>
+              ))}
+            </div>
           )}
         </section>
 
