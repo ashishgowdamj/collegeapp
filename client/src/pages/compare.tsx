@@ -84,22 +84,30 @@ export default function Compare() {
                   <span>College Comparison</span>
                 </CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="p-0">
                 <div className="overflow-x-auto">
-                  <table className="w-full border-collapse">
+                  <table className="w-full border-collapse min-w-fit">
                     <thead>
-                      <tr className="bg-gray-50 dark:bg-gray-800">
-                        <th className="text-left py-3 px-4 text-sm font-semibold text-gray-700 dark:text-gray-300 border-b border-gray-200 dark:border-gray-600">
+                      <tr className="bg-gray-50 dark:bg-gray-800 sticky top-0 z-10">
+                        <th className="text-left py-4 px-6 text-sm font-semibold text-gray-700 dark:text-gray-300 border-b-2 border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 min-w-32 sticky left-0 z-20">
                           Criteria
                         </th>
-                        {selectedColleges.map((college) => (
-                          <th key={college.id} className="text-left py-3 px-4 text-sm font-semibold text-gray-900 dark:text-gray-100 min-w-40 border-b border-gray-200 dark:border-gray-600">
-                            <div className="flex flex-col">
-                              <div className="truncate font-medium" title={college.name}>
-                                {college.shortName || college.name}
+                        {selectedColleges.map((college, index) => (
+                          <th key={college.id} className="text-center py-4 px-6 text-sm font-semibold text-gray-900 dark:text-gray-100 min-w-48 border-b-2 border-gray-200 dark:border-gray-600 border-l border-gray-200 dark:border-gray-600">
+                            <div className="flex flex-col items-center space-y-2">
+                              <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center text-primary font-bold text-lg">
+                                {index + 1}
                               </div>
-                              <div className="text-xs text-gray-500 dark:text-gray-400 font-normal">
-                                {college.location}
+                              <div className="text-center">
+                                <div className="font-semibold text-gray-900 dark:text-gray-100 leading-tight" title={college.name}>
+                                  {college.shortName || college.name}
+                                </div>
+                                <div className="text-xs text-gray-500 dark:text-gray-400 font-normal mt-1">
+                                  {college.location}
+                                </div>
+                                <div className="text-xs text-primary font-medium mt-1">
+                                  Rank #{college.overallRank || 'N/A'}
+                                </div>
                               </div>
                             </div>
                           </th>
@@ -109,20 +117,44 @@ export default function Compare() {
                     <tbody>
                       {comparisonFields.map((field, index) => (
                         <tr key={field.key} className={`${index % 2 === 0 ? 'bg-white dark:bg-gray-900' : 'bg-gray-50/50 dark:bg-gray-800/50'} hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors`}>
-                          <td className="py-4 px-4 text-sm font-medium text-gray-700 dark:text-gray-300 border-b border-gray-100 dark:border-gray-700">
+                          <td className="py-4 px-6 text-sm font-semibold text-gray-700 dark:text-gray-300 border-b border-gray-100 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800/50 sticky left-0 z-10 min-w-32">
                             {field.label}
                           </td>
                           {selectedColleges.map((college) => (
-                            <td key={college.id} className="py-4 px-4 text-sm text-gray-900 dark:text-gray-100 border-b border-gray-100 dark:border-gray-700">
-                              <span className="font-medium">
+                            <td key={college.id} className="py-4 px-6 text-sm text-center text-gray-900 dark:text-gray-100 border-b border-gray-100 dark:border-gray-700 border-l border-gray-100 dark:border-gray-700">
+                              <div className="font-semibold text-base">
                                 {field.format((college as any)[field.key], college)}
-                              </span>
+                              </div>
                             </td>
                           ))}
                         </tr>
                       ))}
                     </tbody>
                   </table>
+                </div>
+                
+                {/* Quick Actions */}
+                <div className="p-4 bg-gray-50 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <span className="text-sm text-gray-600 dark:text-gray-400">
+                      Comparing {selectedColleges.length} colleges side by side
+                    </span>
+                    <div className="flex space-x-2">
+                      <Button 
+                        size="sm" 
+                        variant="outline"
+                        onClick={() => setSelectedColleges([])}
+                      >
+                        Clear All
+                      </Button>
+                      <Button 
+                        size="sm"
+                        onClick={() => window.print()}
+                      >
+                        Print Comparison
+                      </Button>
+                    </div>
+                  </div>
                 </div>
               </CardContent>
             </Card>
@@ -164,7 +196,42 @@ export default function Compare() {
             <div className="text-center py-12">
               <BarChart3 className="w-12 h-12 text-gray-300 dark:text-gray-600 mx-auto mb-4" />
               <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">Start Comparing</h3>
-              <p className="text-gray-500 dark:text-gray-400">Search and select colleges to compare side by side</p>
+              <p className="text-gray-500 dark:text-gray-400 mb-6">Search and select colleges to compare side by side</p>
+              
+              {/* Quick Compare Options */}
+              <div className="space-y-3 max-w-md mx-auto">
+                <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Quick Start:</p>
+                <div className="grid grid-cols-1 gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      const topColleges = colleges.slice(0, 2);
+                      if (topColleges.length >= 2) {
+                        setSelectedColleges(topColleges);
+                      }
+                    }}
+                    className="text-sm"
+                    disabled={colleges.length < 2}
+                  >
+                    Compare Top 2 Colleges
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      const topColleges = colleges.slice(0, 3);
+                      if (topColleges.length >= 3) {
+                        setSelectedColleges(topColleges);
+                      }
+                    }}
+                    className="text-sm"
+                    disabled={colleges.length < 3}
+                  >
+                    Compare Top 3 Colleges
+                  </Button>
+                </div>
+              </div>
             </div>
           )}
 
