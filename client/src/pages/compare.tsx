@@ -84,57 +84,104 @@ export default function Compare() {
                   <span>College Comparison</span>
                 </CardTitle>
               </CardHeader>
-              <CardContent className="p-0">
-                <div className="overflow-x-auto">
-                  <table className="w-full border-collapse min-w-fit">
-                    <thead>
-                      <tr className="bg-gray-50 dark:bg-gray-800 sticky top-0 z-10">
-                        <th className="text-left py-4 px-6 text-sm font-semibold text-gray-700 dark:text-gray-300 border-b-2 border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 min-w-32 sticky left-0 z-20">
-                          Criteria
-                        </th>
-                        {selectedColleges.map((college, index) => (
-                          <th key={college.id} className="text-center py-4 px-6 text-sm font-semibold text-gray-900 dark:text-gray-100 min-w-48 border-b-2 border-gray-200 dark:border-gray-600 border-l border-gray-200 dark:border-gray-600">
-                            <div className="flex flex-col items-center space-y-2">
-                              <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center text-primary font-bold text-lg">
-                                {index + 1}
-                              </div>
-                              <div className="text-center">
-                                <div className="font-semibold text-gray-900 dark:text-gray-100 leading-tight" title={college.name}>
-                                  {college.shortName || college.name}
+              <CardContent className="p-4">
+                {/* College Headers */}
+                <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-6">
+                  {selectedColleges.map((college, index) => (
+                    <div key={college.id} className="bg-gradient-to-br from-primary/5 to-primary/10 dark:from-primary/10 dark:to-primary/20 rounded-lg p-4 border border-primary/20">
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white font-bold text-sm">
+                          {index + 1}
+                        </div>
+                        <button
+                          onClick={() => removeCollege(college.id)}
+                          className="text-gray-400 hover:text-red-500 transition-colors"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
+                      <div className="text-center">
+                        <h3 className="font-semibold text-gray-900 dark:text-gray-100 text-sm leading-tight mb-2" title={college.name}>
+                          {college.shortName || college.name}
+                        </h3>
+                        <div className="text-xs text-gray-600 dark:text-gray-400 mb-1">
+                          {college.location}
+                        </div>
+                        <div className="text-xs text-primary font-medium">
+                          Rank #{college.overallRank || 'N/A'}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Comparison Data - Card Format */}
+                <div className="space-y-4">
+                  {comparisonFields.map((field) => {
+                    // Determine best value for highlighting
+                    const values = selectedColleges.map(college => {
+                      const rawValue = (college as any)[field.key];
+                      if (field.key === 'overallRank') return rawValue ? parseInt(rawValue) : 999;
+                      if (field.key === 'fees') return rawValue ? parseFloat(rawValue) : 999999;
+                      if (field.key === 'rating' || field.key === 'placementRate' || field.key === 'averagePackage') {
+                        return rawValue ? parseFloat(rawValue) : 0;
+                      }
+                      return rawValue;
+                    });
+                    
+                    const getBestIndex = () => {
+                      if (field.key === 'overallRank' || field.key === 'fees') {
+                        const minValue = Math.min(...values.filter(v => v > 0));
+                        return values.findIndex(v => v === minValue);
+                      }
+                      if (field.key === 'rating' || field.key === 'placementRate' || field.key === 'averagePackage') {
+                        const maxValue = Math.max(...values);
+                        return values.findIndex(v => v === maxValue);
+                      }
+                      return -1;
+                    };
+                    
+                    const bestIndex = getBestIndex();
+                    
+                    return (
+                      <div key={field.key} className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
+                        <h4 className="font-semibold text-gray-900 dark:text-gray-100 mb-3 text-center">
+                          {field.label}
+                        </h4>
+                        <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+                          {selectedColleges.map((college, index) => {
+                            const value = field.format((college as any)[field.key], college);
+                            const isBest = index === bestIndex && bestIndex !== -1;
+                            return (
+                              <div key={college.id} className={`rounded-lg p-3 text-center border transition-all ${
+                                isBest 
+                                  ? 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800 ring-2 ring-green-200 dark:ring-green-700' 
+                                  : 'bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700'
+                              }`}>
+                                <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">
+                                  College {index + 1}
                                 </div>
-                                <div className="text-xs text-gray-500 dark:text-gray-400 font-normal mt-1">
-                                  {college.location}
-                                </div>
-                                <div className="text-xs text-primary font-medium mt-1">
-                                  Rank #{college.overallRank || 'N/A'}
+                                <div className={`font-semibold text-sm ${
+                                  isBest ? 'text-green-700 dark:text-green-300' : 'text-gray-900 dark:text-gray-100'
+                                }`}>
+                                  {value}
+                                  {isBest && (
+                                    <div className="text-xs text-green-600 dark:text-green-400 mt-1">
+                                      ✓ Best
+                                    </div>
+                                  )}
                                 </div>
                               </div>
-                            </div>
-                          </th>
-                        ))}
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {comparisonFields.map((field, index) => (
-                        <tr key={field.key} className={`${index % 2 === 0 ? 'bg-white dark:bg-gray-900' : 'bg-gray-50/50 dark:bg-gray-800/50'} hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors`}>
-                          <td className="py-4 px-6 text-sm font-semibold text-gray-700 dark:text-gray-300 border-b border-gray-100 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800/50 sticky left-0 z-10 min-w-32">
-                            {field.label}
-                          </td>
-                          {selectedColleges.map((college) => (
-                            <td key={college.id} className="py-4 px-6 text-sm text-center text-gray-900 dark:text-gray-100 border-b border-gray-100 dark:border-gray-700 border-l border-gray-100 dark:border-gray-700">
-                              <div className="font-semibold text-base">
-                                {field.format((college as any)[field.key], college)}
-                              </div>
-                            </td>
-                          ))}
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
                 
                 {/* Quick Actions */}
-                <div className="p-4 bg-gray-50 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
+                <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <span className="text-sm text-gray-600 dark:text-gray-400">
                       Comparing {selectedColleges.length} colleges side by side
