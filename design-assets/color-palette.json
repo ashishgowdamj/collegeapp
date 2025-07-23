@@ -1,0 +1,141 @@
+{
+  "name": "College Duniya - Mobile App Design System",
+  "description": "Color palette and design tokens for the College Duniya mobile app",
+  "colors": {
+    "primary": {
+      "name": "Primary Blue",
+      "hex": "#3B82F6",
+      "hsl": "hsl(207, 90%, 54%)",
+      "rgb": "rgb(59, 130, 246)",
+      "usage": "Primary actions, links, active states"
+    },
+    "secondary": {
+      "name": "Secondary Orange", 
+      "hex": "#FB923C",
+      "hsl": "hsl(33, 100%, 52%)",
+      "rgb": "rgb(251, 146, 60)",
+      "usage": "Secondary actions, highlights, CTAs"
+    },
+    "accent": {
+      "name": "Accent Green",
+      "hex": "#22C55E", 
+      "hsl": "hsl(120, 61%, 50%)",
+      "rgb": "rgb(34, 197, 94)",
+      "usage": "Success states, positive indicators"
+    },
+    "background": {
+      "name": "Background White",
+      "hex": "#FFFFFF",
+      "hsl": "hsl(0, 0%, 100%)",
+      "rgb": "rgb(255, 255, 255)",
+      "usage": "Main background color"
+    },
+    "backgroundGray": {
+      "name": "Background Gray",
+      "hex": "#F5F5F5",
+      "hsl": "hsl(0, 0%, 96.1%)",
+      "rgb": "rgb(245, 245, 245)",
+      "usage": "Secondary background, page backgrounds"
+    },
+    "surface": {
+      "name": "Surface White",
+      "hex": "#FFFFFF",
+      "hsl": "hsl(0, 0%, 100%)",
+      "rgb": "rgb(255, 255, 255)",
+      "usage": "Card backgrounds, elevated surfaces"
+    },
+    "foreground": {
+      "name": "Text Dark",
+      "hex": "#0A0A0A",
+      "hsl": "hsl(20, 14.3%, 4.1%)",
+      "rgb": "rgb(10, 10, 10)",
+      "usage": "Primary text color"
+    },
+    "muted": {
+      "name": "Muted Gray",
+      "hex": "#F5F5F4",
+      "hsl": "hsl(60, 4.8%, 95.9%)",
+      "rgb": "rgb(245, 245, 244)",
+      "usage": "Muted backgrounds, disabled states"
+    },
+    "mutedForeground": {
+      "name": "Muted Text",
+      "hex": "#737373",
+      "hsl": "hsl(25, 5.3%, 44.7%)",
+      "rgb": "rgb(115, 115, 115)",
+      "usage": "Secondary text, captions, hints"
+    },
+    "border": {
+      "name": "Border Gray",
+      "hex": "#E5E5E5",
+      "hsl": "hsl(20, 5.9%, 90%)",
+      "rgb": "rgb(229, 229, 229)",
+      "usage": "Borders, dividers, outlines"
+    },
+    "destructive": {
+      "name": "Error Red",
+      "hex": "#EF4444",
+      "hsl": "hsl(0, 84.2%, 60.2%)",
+      "rgb": "rgb(239, 68, 68)",
+      "usage": "Error states, destructive actions"
+    }
+  },
+  "gradients": {
+    "primaryCard": {
+      "name": "Primary Card Gradient",
+      "value": "linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%)",
+      "usage": "Header backgrounds, primary cards"
+    },
+    "recommendationBlue": {
+      "name": "Blue Recommendation",
+      "value": "linear-gradient(to right, #EFF6FF, #E0E7FF)",
+      "usage": "Blue recommendation cards"
+    },
+    "recommendationOrange": {
+      "name": "Orange Recommendation", 
+      "value": "linear-gradient(to right, #FFF7ED, #FBBF24)",
+      "usage": "Orange recommendation cards"
+    }
+  },
+  "spacing": {
+    "xs": "4px",
+    "sm": "8px", 
+    "md": "16px",
+    "lg": "24px",
+    "xl": "32px",
+    "2xl": "48px"
+  },
+  "borderRadius": {
+    "sm": "4px",
+    "md": "8px",
+    "lg": "12px",
+    "xl": "16px",
+    "full": "9999px"
+  },
+  "typography": {
+    "fontFamily": {
+      "primary": "Roboto, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+      "icons": "Material Icons"
+    },
+    "fontSize": {
+      "xs": "12px",
+      "sm": "14px",
+      "base": "16px",
+      "lg": "18px",
+      "xl": "20px",
+      "2xl": "24px",
+      "3xl": "32px"
+    },
+    "fontWeight": {
+      "light": "300",
+      "normal": "400",
+      "medium": "500",
+      "bold": "700"
+    }
+  },
+  "shadows": {
+    "sm": "0 1px 2px 0 rgb(0 0 0 / 0.05)",
+    "md": "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)",
+    "lg": "0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)"
+  }
+}

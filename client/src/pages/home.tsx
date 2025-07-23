@@ -16,7 +16,7 @@ export default function Home() {
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
   const [filters, setFilters] = useState<FilterState>({
     courseTypes: [],
-    state: "",
+    state: "all",
     feesRange: 30,
     entranceExams: [],
   });

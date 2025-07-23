@@ -16,7 +16,7 @@ export default function SearchPage() {
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
   const [filters, setFilters] = useState<FilterState>({
     courseTypes: [],
-    state: "",
+    state: "all",
     feesRange: 30,
     entranceExams: [],
   });
@@ -24,7 +24,7 @@ export default function SearchPage() {
   const buildQueryParams = () => {
     const params: Record<string, string> = {};
     if (searchQuery) params.search = searchQuery;
-    if (filters.state) params.state = filters.state;
+    if (filters.state && filters.state !== "all") params.state = filters.state;
     if (filters.feesRange < 30) params.maxFees = (filters.feesRange * 100000).toString();
     return params;
   };

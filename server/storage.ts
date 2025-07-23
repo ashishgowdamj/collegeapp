@@ -334,7 +334,26 @@ export class MemStorage implements IStorage {
   async createCollege(insertCollege: InsertCollege): Promise<College> {
     const id = this.currentCollegeId++;
     const college: College = { 
-      ...insertCollege, 
+      ...insertCollege,
+      shortName: insertCollege.shortName || null,
+      establishedYear: insertCollege.establishedYear || null,
+      affiliation: insertCollege.affiliation || null,
+      imageUrl: insertCollege.imageUrl || null,
+      description: insertCollege.description || null,
+      website: insertCollege.website || null,
+      overallRank: insertCollege.overallRank || null,
+      nirf_rank: insertCollege.nirf_rank || null,
+      fees: insertCollege.fees || null,
+      feesPeriod: insertCollege.feesPeriod || "yearly",
+      rating: insertCollege.rating || null,
+      reviewCount: insertCollege.reviewCount || 0,
+      admissionProcess: insertCollege.admissionProcess || null,
+      cutoffScore: insertCollege.cutoffScore || null,
+      placementRate: insertCollege.placementRate || null,
+      averagePackage: insertCollege.averagePackage || null,
+      highestPackage: insertCollege.highestPackage || null,
+      hostelFees: insertCollege.hostelFees || null,
+      hasHostel: insertCollege.hasHostel || false,
       id,
       createdAt: new Date()
     };
@@ -364,6 +383,19 @@ export class MemStorage implements IStorage {
     const id = this.currentExamId++;
     const exam: Exam = {
       ...insertExam,
+      fullName: insertExam.fullName || null,
+      conductingBody: insertExam.conductingBody || null,
+      frequency: insertExam.frequency || null,
+      applicationStartDate: insertExam.applicationStartDate || null,
+      applicationEndDate: insertExam.applicationEndDate || null,
+      examDate: insertExam.examDate || null,
+      resultDate: insertExam.resultDate || null,
+      eligibility: insertExam.eligibility || null,
+      syllabus: insertExam.syllabus || null,
+      examPattern: insertExam.examPattern || null,
+      totalMarks: insertExam.totalMarks || null,
+      duration: insertExam.duration || null,
+      website: insertExam.website || null,
       id,
       createdAt: new Date()
     };
@@ -381,6 +413,15 @@ export class MemStorage implements IStorage {
     const id = this.currentReviewId++;
     const review: Review = {
       ...insertReview,
+      collegeId: insertReview.collegeId || null,
+      studentName: insertReview.studentName || null,
+      course: insertReview.course || null,
+      graduationYear: insertReview.graduationYear || null,
+      rating: insertReview.rating || null,
+      title: insertReview.title || null,
+      content: insertReview.content || null,
+      likes: insertReview.likes || 0,
+      verified: insertReview.verified || false,
       id,
       createdAt: new Date()
     };
@@ -396,6 +437,9 @@ export class MemStorage implements IStorage {
     const id = this.currentComparisonId++;
     const comparison: Comparison = {
       ...insertComparison,
+      name: insertComparison.name || null,
+      collegeIds: insertComparison.collegeIds || null,
+      userId: insertComparison.userId || null,
       id,
       createdAt: new Date()
     };
@@ -416,7 +460,8 @@ export class MemStorage implements IStorage {
   async createUser(insertUser: InsertUser): Promise<User> {
     const id = this.currentUserId++;
     const user: User = { 
-      ...insertUser, 
+      ...insertUser,
+      preferences: insertUser.preferences || null,
       id,
       createdAt: new Date()
     };

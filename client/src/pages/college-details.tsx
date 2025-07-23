@@ -14,11 +14,11 @@ export default function CollegeDetails() {
   const collegeId = parseInt(id || "0");
 
   const { data: college, isLoading } = useQuery<College>({
-    queryKey: ["/api/colleges", collegeId],
+    queryKey: [`/api/colleges/${collegeId}`],
   });
 
   const { data: reviews = [] } = useQuery<Review[]>({
-    queryKey: ["/api/colleges", collegeId, "reviews"],
+    queryKey: [`/api/colleges/${collegeId}/reviews`],
   });
 
   if (isLoading) {

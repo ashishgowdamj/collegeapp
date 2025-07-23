@@ -27,7 +27,7 @@ export default function FilterModal({ isOpen, onClose, onApplyFilters, initialFi
   const [filters, setFilters] = useState<FilterState>(
     initialFilters || {
       courseTypes: [],
-      state: "",
+      state: "all",
       feesRange: 15,
       entranceExams: [],
     }
@@ -56,7 +56,7 @@ export default function FilterModal({ isOpen, onClose, onApplyFilters, initialFi
   const handleClearAll = () => {
     setFilters({
       courseTypes: [],
-      state: "",
+      state: "all",
       feesRange: 15,
       entranceExams: [],
     });
@@ -112,7 +112,7 @@ export default function FilterModal({ isOpen, onClose, onApplyFilters, initialFi
                 <SelectValue placeholder="Select State" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All States</SelectItem>
+                <SelectItem value="all">All States</SelectItem>
                 {stateOptions.map(state => (
                   <SelectItem key={state} value={state}>{state}</SelectItem>
                 ))}
