@@ -22,7 +22,7 @@ export default function Home() {
   });
 
   const { data: colleges = [], isLoading } = useQuery<College[]>({
-    queryKey: ["/api/colleges", { search: searchQuery, limit: 10 }],
+    queryKey: [`/api/colleges?${searchQuery ? `search=${encodeURIComponent(searchQuery)}&` : ''}limit=10`],
   });
 
   const quickFilters = ["Engineering", "MBA", "Medical", "Arts"];

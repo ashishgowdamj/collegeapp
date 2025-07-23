@@ -21,16 +21,16 @@ export default function SearchPage() {
     entranceExams: [],
   });
 
-  const buildQueryParams = () => {
-    const params: Record<string, string> = {};
-    if (searchQuery) params.search = searchQuery;
-    if (filters.state && filters.state !== "all") params.state = filters.state;
-    if (filters.feesRange < 30) params.maxFees = (filters.feesRange * 100000).toString();
-    return params;
+  const buildQueryString = () => {
+    const params: string[] = [];
+    if (searchQuery) params.push(`search=${encodeURIComponent(searchQuery)}`);
+    if (filters.state && filters.state !== "all") params.push(`state=${encodeURIComponent(filters.state)}`);
+    if (filters.feesRange < 30) params.push(`maxFees=${filters.feesRange * 100000}`);
+    return params.length > 0 ? params.join('&') : '';
   };
 
   const { data: colleges = [], isLoading } = useQuery<College[]>({
-    queryKey: ["/api/colleges", buildQueryParams()],
+    queryKey: [`/api/colleges?${buildQueryString()}`],
   });
 
   const handleApplyFilters = (newFilters: FilterState) => {
