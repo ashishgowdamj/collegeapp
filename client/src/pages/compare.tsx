@@ -14,7 +14,7 @@ export default function Compare() {
   const [searchQuery, setSearchQuery] = useState("");
 
   const { data: colleges = [] } = useQuery<College[]>({
-    queryKey: ["/api/colleges", { search: searchQuery, limit: 20 }],
+    queryKey: [`/api/colleges?${searchQuery ? `search=${encodeURIComponent(searchQuery)}&` : ''}limit=20`],
   });
 
   const addCollege = (college: College) => {
