@@ -2,15 +2,12 @@
   "version": 2,
   "builds": [
     {
-      "src": "api/index.ts",
+      "src": "api/**/*.ts",
       "use": "@vercel/node"
     },
     {
-      "src": "package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "dist/public"
-      }
+      "src": "client/**",
+      "use": "@vercel/static"
     }
   ],
   "routes": [
@@ -19,38 +16,12 @@
       "dest": "/api/index.ts"
     },
     {
-      "src": "^/static/(.*)",
-      "dest": "/dist/public/static/$1"
-    },
-    {
-      "src": "^/assets/(.*)",
-      "dest": "/dist/public/assets/$1"
-    },
-    {
-      "src": "^/favicon.ico",
-      "dest": "/dist/public/favicon.ico"
-    },
-    {
-      "src": "^/manifest.json",
-      "dest": "/dist/public/manifest.json"
-    },
-    {
-      "src": "^/robots.txt",
-      "dest": "/dist/public/robots.txt"
-    },
-    {
-      "src": "^/sitemap.xml",
-      "dest": "/dist/public/sitemap.xml"
-    },
-    {
-      "src": "^/(.*)",
-      "dest": "/dist/public/index.html"
+      "src": "/(.*)",
+      "dest": "/client/index.html"
     }
   ],
   "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/dist/public/index.html"
-    }
+    { "source": "/api/(.*)", "destination": "/api/index.ts" },
+    { "source": "/(.*)", "destination": "/client/index.html" }
   ]
 }

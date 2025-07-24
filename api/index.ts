@@ -1,53 +1,67 @@
-import express, { type Request, Response, NextFunction } from "express";
+import express, { type Request, Response, NextFunction } from 'express';
 import cors from 'cors';
-import { registerRoutes } from "./routes";
+import { registerRoutes } from './routes';
 
 const app = express();
-app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
 
+// Enable CORS for all routes
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
+// Middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Request logging middleware
 app.use((req, res, next) => {
   const start = Date.now();
   const path = req.path;
-  let capturedJsonResponse: Record<string, any> | undefined = undefined;
-
-  const originalResJson = res.json;
-  res.json = function (bodyJson, ...args) {
-    capturedJsonResponse = bodyJson;
-    return originalResJson.apply(res, [bodyJson, ...args]);
+  
+  // Capture JSON response
+  const originalJson = res.json;
+  const capturedJsonResponse: any = {};
+  
+  res.json = function(body) {
+    Object.assign(capturedJsonResponse, body);
+    return originalJson.call(this, body);
   };
-
-  res.on("finish", () => {
+  
+  // Log after response is sent
+  res.on('finish', () => {
     const duration = Date.now() - start;
-    if (path.startsWith("/api")) {
-      let logLine = `${req.method} ${path} ${res.statusCode} in ${duration}ms`;
-      if (capturedJsonResponse) {
-        logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
-      }
-
-      if (logLine.length > 80) {
-        logLine = logLine.slice(0, 79) + "…";
-      }
-
-      console.log(logLine);
+    console.log(`${req.method} ${path} ${res.statusCode} in ${duration}ms`);
+    if (Object.keys(capturedJsonResponse).length > 0) {
+      console.log('Response:', JSON.stringify(capturedJsonResponse).substring(0, 200) + '...');
     }
   });
-
+  
   next();
+});
+
+// Health check endpoint
+app.get('/api/health', (_req, res) => {
+  res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
 // Register API routes
 registerRoutes(app);
 
+// Error handling middleware
 app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
-  console.error(err.stack);
-  res.status(500).json({ error: 'Something went wrong!' });
+  console.error('Error:', err);
+  res.status(500).json({ 
+    error: 'Internal Server Error',
+    message: process.env.NODE_ENV === 'development' ? err.message : 'Something went wrong!'
+  });
 });
 
-// Handle 404
+// 404 handler
 app.use((_req: Request, res: Response) => {
   res.status(404).json({ error: 'Not Found' });
 });
 
-export default app;
+// Export the Express app for Vercel
+module.exports = app;
