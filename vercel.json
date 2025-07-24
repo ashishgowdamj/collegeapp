@@ -19,8 +19,38 @@
       "dest": "/api/index.ts"
     },
     {
-      "src": "/(.*)",
-      "dest": "/dist/public/$1"
+      "src": "^/static/(.*)",
+      "dest": "/dist/public/static/$1"
+    },
+    {
+      "src": "^/assets/(.*)",
+      "dest": "/dist/public/assets/$1"
+    },
+    {
+      "src": "^/favicon.ico",
+      "dest": "/dist/public/favicon.ico"
+    },
+    {
+      "src": "^/manifest.json",
+      "dest": "/dist/public/manifest.json"
+    },
+    {
+      "src": "^/robots.txt",
+      "dest": "/dist/public/robots.txt"
+    },
+    {
+      "src": "^/sitemap.xml",
+      "dest": "/dist/public/sitemap.xml"
+    },
+    {
+      "src": "^/(.*)",
+      "dest": "/dist/public/index.html"
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/dist/public/index.html"
     }
   ]
 }
